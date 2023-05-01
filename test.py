@@ -8,13 +8,14 @@
 
 from keras.models import Model
 import matplotlib.pyplot as plt
-import tensorflow as tf
+# import tensorflow as tf
 import skimage.transform
 from skimage import data, io, filters
 import numpy as np
 from numpy import array
 import os
 from keras.models import load_model
+from skimage.transform import rescale, resize
 from scipy.misc import imresize
 import argparse
 
@@ -25,7 +26,7 @@ image_shape = (96,96,3)
 
 def test_model(input_hig_res, model, number_of_images, output_dir):
     
-    x_test_lr, x_test_hr = Utils.load_test_data_for_model(input_hig_res, 'jpg', number_of_images)
+    x_test_lr, x_test_hr = Utils.load_test_data_for_model(input_hig_res, 'png', number_of_images)
     Utils.plot_test_generated_images_for_model(output_dir, model, x_test_hr, x_test_lr)
 
 def test_model_for_lr_images(input_low_res, model, number_of_images, output_dir):

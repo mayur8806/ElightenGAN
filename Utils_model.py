@@ -5,11 +5,11 @@
 #date            :2018/10/30
 #usage           :imported in other files
 #python_version  :3.5.4
-
 from keras.applications.vgg19 import VGG19
 import keras.backend as K
 from keras.models import Model
-from keras.optimizers import Adam
+from keras import optimizers
+
 
 class VGG_LOSS(object):
 
@@ -32,5 +32,5 @@ class VGG_LOSS(object):
     
 def get_optimizer():
  
-    adam = Adam(lr=1E-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
+    adam =optimizers.Adam(learning_rate=1E-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
     return adam

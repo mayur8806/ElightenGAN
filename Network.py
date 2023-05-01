@@ -7,15 +7,18 @@
 #python_version  :3.5.4 
 
 # Modules
+
 from keras.layers import Dense
 from keras.layers.core import Activation
-from keras.layers.normalization import BatchNormalization
+from keras.layers import BatchNormalization
+#from keras.layers.normalization import BatchNormalization
 from keras.layers.convolutional import UpSampling2D
 from keras.layers.core import Flatten
 from keras.layers import Input
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
 from keras.models import Model
-from keras.layers.advanced_activations import LeakyReLU, PReLU
+from keras.layers import ELU, PReLU, LeakyReLU
+#from keras.layers.advanced_activations import LeakyReLU, PReLU
 from keras.layers import add
 
 

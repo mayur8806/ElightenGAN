@@ -37,10 +37,11 @@ def get_gan_network(discriminator, shape, generator, optimizer, vgg_loss):
 
 # default values for all parameters are given, if want defferent values you can give via commandline
 # for more info use $python train.py -h
-def train(epochs, batch_size, input_dir, output_dir, model_save_dir, number_of_images, train_test_ratio):
+def train(epochs, batch_size, input_dir1, input_dir2, output_dir, model_save_dir, number_of_images, train_test_ratio):
     
-    x_train_lr, x_train_hr, x_test_lr, x_test_hr = Utils.load_training_data(input_dir, '.jpg', number_of_images, train_test_ratio) 
+    x_train_lr, x_train_hr, x_test_lr, x_test_hr = Utils.load_training_data(input_dir1, input_dir2,'.png', number_of_images, train_test_ratio) 
     loss = VGG_LOSS(image_shape)  
+    print("perfect")
     
     batch_count = int(x_train_hr.shape[0] / batch_size)
     shape = (image_shape[0]//downscale_factor, image_shape[1]//downscale_factor, image_shape[2])
@@ -49,6 +50,7 @@ def train(epochs, batch_size, input_dir, output_dir, model_save_dir, number_of_i
     discriminator = Discriminator(image_shape).discriminator()
 
     optimizer = Utils_model.get_optimizer()
+    print("ok")
     generator.compile(loss=loss.vgg_loss, optimizer=optimizer)
     discriminator.compile(loss="binary_crossentropy", optimizer=optimizer)
     
@@ -104,8 +106,10 @@ if __name__== "__main__":
 
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('-i', '--input_dir', action='store', dest='input_dir', default='./data/' ,
-                    help='Path for input images')
+    parser.add_argument('-i', '--input_dir1', action='store', dest='input_dir1', default="/home/mhadawale/Documents/Keras-SRGAN/data/hr_images",
+                    help='Path for hr images')
+    parser.add_argument('-j', '--input_dir2', action='store', dest='input_dir2', default="/home/mhadawale/Documents/Keras-SRGAN/data/lr_images",
+                    help='Path for lr images')
                     
     parser.add_argument('-o', '--output_dir', action='store', dest='output_dir', default='./output/' ,
                     help='Path for Output images')
@@ -113,13 +117,13 @@ if __name__== "__main__":
     parser.add_argument('-m', '--model_save_dir', action='store', dest='model_save_dir', default='./model/' ,
                     help='Path for model')
 
-    parser.add_argument('-b', '--batch_size', action='store', dest='batch_size', default=64,
+    parser.add_argument('-b', '--batch_size', action='store', dest='batch_size', default=5,
                     help='Batch Size', type=int)
                     
     parser.add_argument('-e', '--epochs', action='store', dest='epochs', default=1000 ,
                     help='number of iteratios for trainig', type=int)
                     
-    parser.add_argument('-n', '--number_of_images', action='store', dest='number_of_images', default=1000 ,
+    parser.add_argument('-n', '--number_of_images', action='store', dest='number_of_images', default=100 ,
                     help='Number of Images', type= int)
                     
     parser.add_argument('-r', '--train_test_ratio', action='store', dest='train_test_ratio', default=0.8 ,
@@ -127,6 +131,6 @@ if __name__== "__main__":
     
     values = parser.parse_args()
     
-    train(values.epochs, values.batch_size, values.input_dir, values.output_dir, values.model_save_dir, values.number_of_images, values.train_test_ratio)
+    train(values.epochs, values.batch_size, values.input_dir1, values.input_dir2, values.output_dir, values.model_save_dir, values.number_of_images, values.train_test_ratio)
 
 

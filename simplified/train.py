@@ -9,7 +9,7 @@ from keras.optimizers import SGD, Adam, RMSprop
 import keras
 import keras.backend as K
 from keras.layers import Lambda, Input
-import tensorflow as tf
+# import tensorflow as tf
 import skimage.transform
 from skimage import data, io, filters
 import numpy as np
@@ -55,6 +55,7 @@ def load_path(path):
     return directories
     
 def load_data_from_dirs(dirs, ext):
+    print("--------------------------",dirs)
     files = []
     file_names = []
     count = 0
@@ -82,14 +83,15 @@ def load_data_from_dirs_resize(dirs, ext, size):
                         
           
 def load_data(directory, ext):
-
+    print("---------------------------------------------------")
     files = load_data_from_dirs(load_path(directory), ext)
     return files
 
 
-files = load_data("./data", ".jpg")
-x_train = files[:500]
-x_test = files[600:900]
+files = load_data("./home/mhadawale/Documents/Keras-SRGAN/data", ".png")
+print(files)
+x_train = files[:50]
+x_test = files[60:100]
 
 print("data loaded")
 

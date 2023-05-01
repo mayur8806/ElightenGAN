@@ -7,12 +7,14 @@
 #python_version  :3.5.4
 
 from keras.layers import Lambda
-import tensorflow as tf
-from skimage import data, io, filters
+# import tensorflow as tf
+#from skimage import data, io, filters
+import skimage.io
 import numpy as np
 from numpy import array
 from numpy.random import randint
-from scipy.misc import imresize
+# from skimage.transform import resize
+#from scipy.misc import imresize
 import os
 import sys
 
@@ -65,17 +67,20 @@ def load_path(path):
     return directories
     
 def load_data_from_dirs(dirs, ext):
+    print("99999999999999999999999999999")
     files = []
     file_names = []
     count = 0
     for d in dirs:
         for f in os.listdir(d): 
             if f.endswith(ext):
-                image = data.imread(os.path.join(d,f))
+                image = skimage.io.imread(os.path.join(d,f))
+                # print(len(image.shape))
                 if len(image.shape) > 2:
                     files.append(image)
                     file_names.append(os.path.join(d,f))
                 count = count + 1
+    #print(files)
     return files     
 
 def load_data(directory, ext):
@@ -83,36 +88,49 @@ def load_data(directory, ext):
     files = load_data_from_dirs(load_path(directory), ext)
     return files
     
-def load_training_data(directory, ext, number_of_images = 1000, train_test_ratio = 0.8):
+def load_training_data(directory1,directory2, ext, number_of_images = 100, train_test_ratio = 0.8):
 
     number_of_train_images = int(number_of_images * train_test_ratio)
     
-    files = load_data_from_dirs(load_path(directory), ext)
+    files1 = load_data_from_dirs(load_path(directory1), ext)
+    files2=load_data_from_dirs(load_path(directory2), ext)
+    #print(files)
     
-    if len(files) < number_of_images:
+    if len(files1) < 100:
         print("Number of image files are less then you specified")
-        print("Please reduce number of images to %d" % len(files))
+        print("Please reduce number of images to %d" % len(files1))
+        sys.exit()
+    if len(files2) < 100:
+        print("Number of image files are less then you specified")
+        print("Please reduce number of images to %d" % len(files2))
         sys.exit()
         
-    test_array = array(files)
+    test_array = array(files1,dtype=object)
+    test_array = array(files2,dtype=object)
+    #print(test_array)
     if len(test_array.shape) < 3:
+        #print(len(test_array))
+        print(len(test_array.shape))
         print("Images are of not same shape")
         print("Please provide same shape images")
         sys.exit()
     
-    x_train = files[:number_of_train_images]
-    x_test = files[number_of_train_images:number_of_images]
+    x_train1 = files1[:number_of_train_images]
+    x_test1 = files1[number_of_train_images:number_of_images]
+
+    x_train2 = files2[:number_of_train_images]
+    x_test2 = files2[number_of_train_images:number_of_images]
     
-    x_train_hr = hr_images(x_train)
+    x_train_hr = hr_images(x_train1)
     x_train_hr = normalize(x_train_hr)
     
-    x_train_lr = lr_images(x_train, 4)
+    x_train_lr = hr_images(x_train2)
     x_train_lr = normalize(x_train_lr)
     
-    x_test_hr = hr_images(x_test)
+    x_test_hr = hr_images(x_test1)
     x_test_hr = normalize(x_test_hr)
     
-    x_test_lr = lr_images(x_test, 4)
+    x_test_lr = hr_images(x_test2)
     x_test_lr = normalize(x_test_lr)
     
     return x_train_lr, x_train_hr, x_test_lr, x_test_hr
